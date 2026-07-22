@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CERTIFICATIONS, EXPERIENCE, PROJECTS, SKILLS } from "./data";
+import { EDUCATION, EXPERIENCE, PERSONAL_INFO, PROJECTS, SKILLS } from "./data";
 import type { FileName } from "./data";
 
 type Line = { kind: "in" | "out" | "err" | "ascii"; text: string };
@@ -7,12 +7,12 @@ type Line = { kind: "in" | "out" | "err" | "ascii"; text: string };
 const HELP = [
   "Available commands:",
   "  help        Show this help message",
-  "  whoami      About Jawad",
+  "  whoami      About Syed Jawad Hussain Mashhadi",
   "  skills      List technical skills",
-  "  projects    Show featured projects",
-  "  experience  Career timeline",
-  "  resume      Open resume.pdf",
-  "  certs       List certifications",
+  "  projects    Show featured projects & screenshot count",
+  "  experience  Career timeline & internship",
+  "  education   Academic standing & degree details",
+  "  resume      Open resume.pdf viewer",
   "  contact     How to reach me",
   "  neofetch    System info",
   "  clear       Clear the terminal",
@@ -20,17 +20,17 @@ const HELP = [
 
 const NEOFETCH = String.raw`
        .---.        jawad@portfolio
-      /     \       --------------
-      \.@-@./       OS: Lovable Linux x86_64
-      /\`\\_/\`\\     Host: VS Code Clone v1.0
-     //_^_^_\\\\    Shell: zsh 5.9
-    ( \\_   _/ )    Editor: VS Code
-                    Stack: Docker · K8s · Terraform
+      /     \       ----------------
+      \.@-@./       User: Syed Jawad Hussain Mashhadi
+      /\`\\_/\`\\     Role: Cloud & DevOps Intern
+     //_^_^_\\\\    University: COMSATS (CGPA: 3.88/4.00)
+    ( \\_   _/ )    Editor: VS Code Portfolio
+                    Stack: K8s · Docker · AWS · Jenkins · Prometheus
 `;
 
 export function Terminal({ onOpen }: { onOpen: (f: FileName) => void }) {
   const [history, setHistory] = useState<Line[]>([
-    { kind: "out", text: "Welcome to jawad@portfolio — type `help` to get started." },
+    { kind: "out", text: "Welcome to jawad@portfolio — type `help` to list commands." },
   ]);
   const [input, setInput] = useState("");
   const [past, setPast] = useState<string[]>([]);
@@ -50,33 +50,39 @@ export function Terminal({ onOpen }: { onOpen: (f: FileName) => void }) {
         HELP.forEach((t) => out.push({ kind: "out", text: t }));
         break;
       case "whoami":
-        out.push({ kind: "out", text: "jawad — Computer Science student & DevOps engineer." });
-        out.push({ kind: "out", text: "Passions: Kubernetes, Docker, Linux, Cloud, CI/CD, IaC." });
+        out.push({ kind: "out", text: `${PERSONAL_INFO.name} — ${PERSONAL_INFO.role}` });
+        out.push({ kind: "out", text: `${PERSONAL_INFO.summary}` });
         break;
       case "skills":
-        Object.entries(SKILLS).forEach(([k, v]) => out.push({ kind: "out", text: `  ${k.padEnd(18)} ${v.join(", ")}` }));
+        Object.entries(SKILLS).forEach(([k, v]) => out.push({ kind: "out", text: `  ${k.padEnd(32)} ${v.join(", ")}` }));
         break;
       case "projects":
-        PROJECTS.forEach((p, i) => out.push({ kind: "out", text: `  [${i + 1}] ${p.title}  —  ${p.stack.join(", ")}` }));
+        PROJECTS.forEach((p, i) =>
+          out.push({
+            kind: "out",
+            text: `  [${i + 1}] ${p.title} (${p.category}) — ${p.stack.join(", ")} [${p.screenshots.length} Screenshots]`,
+          })
+        );
         out.push({ kind: "out", text: "→ Opening projects.ts ..." });
         onOpen("projects.ts");
         break;
       case "experience":
-        EXPERIENCE.forEach((e) => out.push({ kind: "out", text: `  ${e.period.padEnd(18)} ${e.role} @ ${e.company}` }));
+        EXPERIENCE.forEach((e) => out.push({ kind: "out", text: `  ${e.period.padEnd(20)} ${e.role} @ ${e.company}` }));
         onOpen("experience.js");
+        break;
+      case "education":
+        out.push({ kind: "out", text: `  ${EDUCATION.degree} — ${EDUCATION.institution}` });
+        out.push({ kind: "out", text: `  ${EDUCATION.period} | ${EDUCATION.details}` });
+        onOpen("education.json");
         break;
       case "resume":
         out.push({ kind: "out", text: "→ Opening resume.pdf ..." });
         onOpen("resume.pdf");
         break;
-      case "certs":
-      case "certifications":
-        CERTIFICATIONS.forEach((c2) => out.push({ kind: "out", text: `  ${String(c2.year)}  ${c2.name} — ${c2.issuer}` }));
-        break;
       case "contact":
-        out.push({ kind: "out", text: "  email    jawad@example.com" });
-        out.push({ kind: "out", text: "  github   github.com/jawad" });
-        out.push({ kind: "out", text: "  linkedin linkedin.com/in/jawad" });
+        out.push({ kind: "out", text: `  email    ${PERSONAL_INFO.email}` });
+        out.push({ kind: "out", text: `  phone    ${PERSONAL_INFO.phone}` });
+        out.push({ kind: "out", text: `  location ${PERSONAL_INFO.location}` });
         onOpen("contact.css");
         break;
       case "neofetch":

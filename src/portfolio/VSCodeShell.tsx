@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Files, User, FolderGit2, Cpu, Briefcase, Award, Mail, FileText,
+  Files, User, FolderGit2, Cpu, Briefcase, GraduationCap, Mail, FileText,
   GitBranch, Bell, Check, X, ChevronRight, ChevronDown, Search, Settings, Terminal as TermIcon, Palette,
 } from "lucide-react";
 import { FILES, type FileName } from "./data";
@@ -9,8 +9,8 @@ import { FileIcon } from "./FileIcon";
 import { Terminal } from "./Terminal";
 import { THEMES, type ThemeId } from "./themes";
 import {
-  HomeFile, AboutFile, SkillsFile, ProjectsFile, ExperienceFile,
-  CertificationsFile, ContactFile, AchievementsFile, ReadmeFile, ResumeFile,
+  HomeFile, AboutFile, SkillsFile, ProjectsFile, ExperienceFile, EducationFile,
+  ContactFile, ReadmeFile, ResumeFile,
 } from "./files";
 
 const FILE_TO_COMPONENT: Record<FileName, (props: { onOpen: (f: FileName) => void }) => React.ReactElement> = {
@@ -19,9 +19,8 @@ const FILE_TO_COMPONENT: Record<FileName, (props: { onOpen: (f: FileName) => voi
   "skills.json": () => <SkillsFile />,
   "projects.ts": () => <ProjectsFile />,
   "experience.js": () => <ExperienceFile />,
-  "certifications.yaml": () => <CertificationsFile />,
+  "education.json": () => <EducationFile />,
   "contact.css": () => <ContactFile />,
-  "achievements.md": () => <AchievementsFile />,
   "README.md": () => <ReadmeFile />,
   "resume.pdf": () => <ResumeFile />,
 };
@@ -32,7 +31,7 @@ const ACTIVITY: { id: string; label: string; icon: React.ComponentType<{ size?: 
   { id: "projects", label: "Projects", icon: FolderGit2, file: "projects.ts" },
   { id: "skills", label: "Skills", icon: Cpu, file: "skills.json" },
   { id: "experience", label: "Experience", icon: Briefcase, file: "experience.js" },
-  { id: "certs", label: "Certifications", icon: Award, file: "certifications.yaml" },
+  { id: "education", label: "Education", icon: GraduationCap, file: "education.json" },
   { id: "contact", label: "Contact", icon: Mail, file: "contact.css" },
   { id: "resume", label: "Resume", icon: FileText, file: "resume.pdf" },
 ];
